@@ -1,0 +1,101 @@
+<script>  
+	   window.onload = function(){
+         var w = $('.cutout-img').width();
+         console.log(w);
+         var h = $('.cutout-img').height();
+         console.log(h);
+         
+       
+         
+       }
+
+</script>
+
+
+<div><img src={img} alt=""></div>
+
+<!-- [{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1006783/o_paaaasb.jpg","info":'{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]}'}] -->
+<!-- [{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1006783/o_paaaasb.jpg","info1":'{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]}',"info2":'{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]}',"info3":'{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]}'}] -->
+
+<script>  
+  window.onload = function(){
+      var w = $('.cutout-img').width();
+      console.log(w);
+      var h = $('.cutout-img').height();
+      console.log(h);
+      var info = JSON.stringify($('.info').text());
+      var im = JSON.parse(info);
+      console.log(im);
+      console.log(im.type)
+    }
+
+</script>
+
+<style type="text/css">
+  .info{
+  display: none;
+  }
+</style>
+
+[{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1006783/o_paaaasb.jpg","info":'{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]}',"info2":'{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]}',"info3":'{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]}'}]
+
+<div>
+  <div class="card">
+    <div class="cutout-img" data-width="1000"><img src="http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1006791/o_o_%E5%A3%81%E7%BA%B8%20(19).jpg" width="600px"alt=""></div>
+  </div> 
+
+  <div class="info">{info}</div>
+</div>
+
+<script>  
+  window.onload = function(){
+ 
+      var W = $('.cutout-img img').width();
+      console.log(W);
+      var H = $('.cutout-img img').height();
+      console.log(H);
+      var info = JSON.parse($('.info').text());
+      console.log(info);
+      var x = info.location[0];
+      var y = info.location[1];
+      var w = info.location[2];
+      var h = info.location[3];
+      var newDiv = $('<div></div>');
+      newDiv.addClass('newDiv');
+      $(".card").append(newDiv);
+      var newDiv_w = w * W;
+      var newDiv_h = h * H;
+      console.log("newDiv_w,newDiv_h",newDiv_w,newDiv_h)
+      var l = x * W;
+      var r = y * H;
+      var newDiv_postion = {
+        xx: l-newDiv_w/2,
+        yy: r-newDiv_h/2
+      }
+      console.log("newDiv_postion",newDiv_postion);
+      $('.newDiv').css({
+        "position": "absolute",
+        "left": newDiv_postion.xx+"px",
+        "top": newDiv_postion.yy+"px",
+        "width": newDiv_w+"px",
+        "height": newDiv_h+"px"
+      });
+    }
+
+</script>
+
+<style type="text/css">
+  .info{
+    
+  }
+  .card .div {
+    width: 100%;
+    height: 100%;
+  }
+  .card {
+    position: relative;
+  }
+  .newDiv {
+    border: 1px solid red;
+  }
+</style>

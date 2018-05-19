@@ -1,0 +1,144 @@
+[{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1006783/o_paaaasb.jpg","info1":'{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]}',"info2":'{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]}',"info3":'{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]}'}]
+
+
+[{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1006783/o_paaaasb.jpg","info":'[{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]},{{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]}]'}]
+
+[{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1006783/o_paaaasb.jpg","info":'[{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]}]'}]
+
+[{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1043045/o_demo.jpg","info":'[{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]},{"type":0,"location":[0.583401,0.548043,0.171452,0.978789]},{"type":0,"location":[0.338336,0.583956,0.199699,0.840053]},{"type":0,"location":[0.332996,0.176816,0.178188,0.334520]},{"type":0,"location":[0.627024,0.144963,0.117090, 0.205607]},{"type":0,"location":[0.490999,0.183903,0.071534,0.232579]}]']
+
+<div>
+  <div class="card">
+    <div class="cutout-img" ><img src={img} width="600px" alt=""></div>
+  </div> 
+
+  <div class="info">{info}</div>
+
+</div>
+
+<script>  
+  window.onload = function(){
+ 
+      var W = $('.cutout-img img').width();
+      console.log(W);
+      var H = $('.cutout-img img').height();
+      console.log(H);
+      var info = JSON.parse($('.info').text());
+      console.log(info);
+    
+        info.map(function(item,index){
+          var newDiv = $('<div></div>');
+          var newClass = 'newDiv'+index;
+          newDiv.addClass(newClass);
+          var x = info[index].location[0];
+          var y = info[index].location[1];
+          var w = info[index].location[2];
+          var h = info[index].location[3];
+          $(".card").append(newDiv);
+          var newDiv_w = w * W;
+          var newDiv_h = h * H;
+          console.log("newDiv_w,newDiv_h",newDiv_w,newDiv_h)
+          var l = x * W;
+          var r = y * H;
+          var newDiv_postion = {
+            xx: l-newDiv_w/2,
+            yy: r-newDiv_h/2
+          }
+          console.log("newDiv_postion",newDiv_postion);
+          $("."+newClass).css({
+            "border": "1px solid red",
+            "position": "absolute",
+            "left": newDiv_postion.xx+"px",
+            "top": newDiv_postion.yy+"px",
+            "width": newDiv_w+"px",
+            "height": newDiv_h+"px"
+          });
+        })
+    
+    }
+
+</script>
+
+<style type="text/css">
+  .info{
+    
+  }
+
+  .card {
+    position: relative;
+  }
+
+</style>
+
+correct:
+[{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1043045/o_demo.jpg","info":'[{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]}]'}]
+correct:
+[{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1043045/o_demo.jpg","info":'[{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]},{"type":0,"location":[0.583401,0.548043,0.171452,0.978789]},{"type":0,"location":[0.338336,0.583956,0.199699,0.840053]},{"type":0,"location":[0.332996,0.176816,0.178188,0.334520]},{"type":0,"location":[0.627024,0.144963,0.117090, 0.205607]},{"type":0,"location":[0.490999,0.183903,0.071534,0.232579]} ]'}]
+
+一个完整数据correct：
+[{"img":"http://images.cnblogs.com/cnblogs_com/zhangmingzhao/1043045/o_demo.jpg","info":'[{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]},{"type":0,"location":[0.583401,0.548043,0.171452,0.978789]},{"type":0,"location":[0.338336,0.583956,0.199699,0.840053]},{"type":0,"location":[0.332996,0.176816,0.178188,0.334520]},{"type":0,"location":[0.627024,0.144963,0.117090, 0.205607]},{"type":0,"location":[0.490999,0.183903,0.071534,0.232579]} ]'}]
+
+<div>
+  <div class="card">
+    <div class="cutout-img" ><img src={img} width="600px" alt=""></div>
+  </div> 
+
+  <div class="info">{info}</div>
+
+</div>
+
+
+
+<script>  
+  window.onload = function(){
+ 
+      var W = $('.cutout-img img').width();
+      console.log(W);
+      var H = $('.cutout-img img').height();
+      console.log(H);
+      var info = JSON.parse($('.info').text());
+      console.log(info);
+    
+        info.map(function(item,index){
+          var newDiv = $('<div></div>');
+          var newClass = 'newDiv'+index;
+          newDiv.addClass(newClass);
+          var x = info[index].location[0];
+          var y = info[index].location[1];
+          var w = info[index].location[2];
+          var h = info[index].location[3];
+          $(".card").append(newDiv);
+          var newDiv_w = w * W;
+          var newDiv_h = h * H;
+          console.log("newDiv_w,newDiv_h",newDiv_w,newDiv_h)
+          var l = x * W;
+          var r = y * H;
+          var newDiv_postion = {
+            xx: l-newDiv_w/2,
+            yy: r-newDiv_h/2
+          }
+          console.log("newDiv_postion",newDiv_postion);
+          $("."+newClass).css({
+            "border": "1px solid red",
+            "position": "absolute",
+            "left": newDiv_postion.xx+"px",
+            "top": newDiv_postion.yy+"px",
+            "width": newDiv_w+"px",
+            "height": newDiv_h+"px"
+          });
+        })
+    
+    }
+
+</script>
+
+<style type="text/css">
+  .info{
+    
+  }
+
+  .card {
+    position: relative;
+  }
+
+</style>
