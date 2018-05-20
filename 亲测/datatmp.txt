@@ -222,3 +222,99 @@ correct:
   }
 
 </style>
+
+
+带数据数据的：
+<div>
+  <div class="card">
+    <div class="cutout-img" ><img src={img} width="1200px" alt=""></div>
+  </div> 
+
+  <div class="info">{info}</div>
+  <div class="mybtn">生成数据</div>
+</div>
+
+<script>  
+  window.onload = function(){
+ 
+      var W = $('.cutout-img img').width();
+      console.log(W);
+      var H = $('.cutout-img img').height();
+      console.log(H);
+      var info = JSON.parse($('.info').text());
+      console.log(info);
+    
+        info.map(function(item,index){
+          var newDiv = $('<div></div>');
+          var newClass = 'newDiv'+index;
+          newDiv.addClass(newClass);
+          var x = info[index].location[0];
+          var y = info[index].location[1];
+          var w = info[index].location[2];
+          var h = info[index].location[3];
+          $(".card").append(newDiv);
+          var newDiv_w = w * W;
+          var newDiv_h = h * H;
+          console.log("newDiv_w,newDiv_h",newDiv_w,newDiv_h)
+          var l = x * W;
+          var r = y * H;
+          var newDiv_postion = {
+            xx: l-newDiv_w/2,
+            yy: r-newDiv_h/2
+          }
+          console.log("newDiv_postion",newDiv_postion);
+          $("."+newClass).css({
+            "border": "1px solid red",
+            "position": "absolute",
+            "left": newDiv_postion.xx+"px",
+            "top": newDiv_postion.yy+"px",
+            "width": newDiv_w+"px",
+            "height": newDiv_h+"px"
+          });
+              var newDivChild = $('<div></div>');
+          var newClassChild = 'index'+index;
+          newDivChild.addClass(newClassChild);
+          $("."+newClass).append(newDivChild);
+          $(".index"+index).css({
+            // "border": "1px solid red",
+            "position": "absolute",
+            "left": "0px",
+            "top": "0px",
+            "font-size": "40px",
+            "color": "blue"
+          });
+          console.log(index);
+          $(".index"+index).text(index);  
+        })
+    	        var dataObj = {};
+        $('.mybtn').click(function() {
+          var dataArray = $('.focus-select');
+          //console.log(dataArray[0].innerHTML());
+          dataArray.each(function(index,item){
+               // console.log(index,item)
+            console.log($(item).text());
+            var strInfo = $(item).text();
+            var qLocal = /\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].replace('，',',').trim().split(',');
+            console.log(qLocal);
+          });
+          
+        })
+    }
+
+</script>
+
+<style type="text/css">
+  .info{
+    display:none;
+  }
+   .mybtn {
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      background-color: red;
+    }
+  .card {
+    position: relative;
+  }
+
+</style>
