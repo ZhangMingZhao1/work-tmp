@@ -32,17 +32,23 @@
   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
   <script>  
     window.onload = function(){
+        //按照现在图实际的大小根据比例数据生成图框
         var W = $('.cutout-img img').width();
         console.log(W);
         var H = $('.cutout-img img').height();
         console.log(H);
-        
+        //获得原始图的大小
+        var natureImage = new Image(); 
+        natureImage.src = $('.cutout-img img').attr( "src"); 
+        var natureWidth = natureImage.width;
+        var natureHeight = natureImage.height;
+        console.log("natureWidth,natureHeight:",natureWidth,natureHeight)
         
         // var info = JSON.parse($('.info').text());
         var info = [{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]},{"type":0,"location":[0.583401,0.548043,0.171452,0.978789]},{"type":0,"location":[0.338336,0.583956,0.199699,0.840053]},{"type":0,"location":[0.332996,0.176816,0.178188,0.334520]},{"type":0,"location":[0.627024,0.144963,0.117090, 0.205607]},{"type":0,"location":[0.490999,0.183903,0.071534,0.232579]}];
         console.log(info);
         info.map(function(item,index){
-          item.key = index;
+          //item.key = index;
           var newDiv = $('<div></div>');
           var newClass = 'newDiv'+index;
           newDiv.addClass(newClass);
@@ -87,7 +93,7 @@
           
         })
         
-        var dataObj = [];
+        var dataObj = {};
         $('.mybtn').click(function() {
           var dataArray = $('.focus-select');
           //console.log(dataArray[0].innerHTML);
@@ -96,9 +102,36 @@
             console.log($(item).text());
             var strInfo = $(item).text();
             // console.log(/\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].trim());
-            var qLocal = /\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].replace('，',',').trim().split(',');
-            var qkey =  /区域属性：\d+/.exec("区域坐标：[275, 225，488, 521]  区域属性：13")[0].split('：')[1];
-            console.log(qLocal,qkey);
+            var qLocal = /\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].replace('，',',').trim().split(',');//string类型
+            qLocal = qLocal.map(function(item,index) {
+              return parseInt(item);
+            })
+            var qinfo =  /区域属性：\d+(,\d+)*/.exec(strInfo)[0].split('：')[1].split(',');
+            console.log(qinfo);
+            if(qinfo[1]) {
+              var qkey = qinfo[0];//第几个框(从0开始)
+              var qtype = qinfo[1];//string类型
+              console.log(qkey,qtype);
+              console.log("qLocal",qLocal);
+              var newWidth = (qLocal[2] - qLocal[0])/2;
+              var newX = (newWidth + qLocal[0])/natureWidth;
+              var newHeight = (qLocal[3] - qLocal[1])/2;
+              var newY = (newHeight + qLocal[1])/natureHeight;
+              var newW = newWidth/natureWidth;
+              var newH = newHeight/natureHeight;
+              dataObj.type = parseInt(qtype);
+              dataObj.location = [];
+              dataObj.location[0] = parseFloat(newX.toFixed(6));
+              dataObj.location[1] = parseFloat(newY.toFixed(6));
+              dataObj.location[2] = parseFloat(newW.toFixed(6));
+              dataObj.location[3] = parseFloat(newH.toFixed(6));
+              console.log(dataObj)
+            }else{
+             var qkey = qinfo[0];
+             console.log(qkey[0]);
+            }
+            
+            //如果新加的那么qtype一定存在
             
           });
         })

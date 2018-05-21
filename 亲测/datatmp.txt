@@ -224,7 +224,7 @@ correct:
 </style>
 
 
-带数据数据的：
+带数据的：
 <div>
   <div class="card">
     <div class="cutout-img" ><img src={img} width="1200px" alt=""></div>
