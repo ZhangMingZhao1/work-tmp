@@ -45,7 +45,8 @@
         console.log("natureWidth,natureHeight:",natureWidth,natureHeight)
         
         // var info = JSON.parse($('.info').text());
-        var info = [{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]},{"type":0,"location":[0.583401,0.548043,0.171452,0.978789]},{"type":0,"location":[0.338336,0.583956,0.199699,0.840053]},{"type":0,"location":[0.332996,0.176816,0.178188,0.334520]},{"type":0,"location":[0.627024,0.144963,0.117090, 0.205607]},{"type":0,"location":[0.490999,0.183903,0.071534,0.232579]}];
+        // var info = [{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]},{"type":0,"location":[0.583401,0.548043,0.171452,0.978789]},{"type":0,"location":[0.338336,0.583956,0.199699,0.840053]},{"type":0,"location":[0.332996,0.176816,0.178188,0.334520]},{"type":0,"location":[0.627024,0.144963,0.117090, 0.205607]},{"type":0,"location":[0.490999,0.183903,0.071534,0.232579]}];
+        var info = JSON.parse($('.info').text());
         console.log(info);
         info.map(function(item,index){
           //item.key = index;
@@ -108,17 +109,19 @@
             })
             var qinfo =  /区域属性：\d+(,\d+)*/.exec(strInfo)[0].split('：')[1].split(',');
             console.log(qinfo);
+            var newWidth = qLocal[2] - qLocal[0];
+            var newX = (newWidth/2 + qLocal[0])/natureWidth;
+            var newHeight = qLocal[3] - qLocal[1];
+            var newY = (newHeight/2 + qLocal[1])/natureHeight;
+            var newW = newWidth/natureWidth;
+            var newH = newHeight/natureHeight;
             if(qinfo[1]) {
+              console.log('-------------替换工作--------------------------');
+              
               var qkey = qinfo[0];//第几个框(从0开始)
               var qtype = qinfo[1];//string类型
               console.log(qkey,qtype);
               console.log("qLocal",qLocal);
-              var newWidth = (qLocal[2] - qLocal[0])/2;
-              var newX = (newWidth + qLocal[0])/natureWidth;
-              var newHeight = (qLocal[3] - qLocal[1])/2;
-              var newY = (newHeight + qLocal[1])/natureHeight;
-              var newW = newWidth/natureWidth;
-              var newH = newHeight/natureHeight;
               dataObj.type = parseInt(qtype);
               dataObj.location = [];
               dataObj.location[0] = parseFloat(newX.toFixed(6));
@@ -127,8 +130,18 @@
               dataObj.location[3] = parseFloat(newH.toFixed(6));
               console.log(dataObj)
             }else{
-             var qkey = qinfo[0];
-             console.log(qkey[0]);
+              console.log('-------------修改工作--------------------------');
+              console.log("修改前:",info);
+              var qkey = parseInt(qinfo[0]);
+              console.log(qkey);
+              console.log(info[qkey].location[0]);
+              console.log(parseFloat(newX.toFixed(6)));
+             
+             info[qkey].location[0] = parseFloat(newX.toFixed(6));
+             info[qkey].location[1] = parseFloat(newY.toFixed(6));
+             info[qkey].location[2] = parseFloat(newW.toFixed(6));
+             info[qkey].location[3] = parseFloat(newH.toFixed(6));
+             console.log("修改后:",info);
             }
             
             //如果新加的那么qtype一定存在

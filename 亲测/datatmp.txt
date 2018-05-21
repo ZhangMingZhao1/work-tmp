@@ -318,3 +318,262 @@ correct:
   }
 
 </style>
+
+
+坐标生成错误版本：
+<script>  
+  window.onload = function(){
+ 
+           //按照现在图实际的大小根据比例数据生成图框
+        var W = $('.cutout-img img').width();
+        console.log(W);
+        var H = $('.cutout-img img').height();
+        console.log(H);
+        //获得原始图的大小
+        var natureImage = new Image(); 
+        natureImage.src = $('.cutout-img img').attr( "src"); 
+        var natureWidth = natureImage.width;
+        var natureHeight = natureImage.height;
+           console.log("natureWidth,natureHeight:",natureWidth,natureHeight)
+      var info = JSON.parse($('.info').text());
+      console.log(info);
+    
+        info.map(function(item,index){
+          var newDiv = $('<div></div>');
+          var newClass = 'newDiv'+index;
+          newDiv.addClass(newClass);
+          var x = info[index].location[0];
+          var y = info[index].location[1];
+          var w = info[index].location[2];
+          var h = info[index].location[3];
+          $(".card").append(newDiv);
+          var newDiv_w = w * W;
+          var newDiv_h = h * H;
+          console.log("newDiv_w,newDiv_h",newDiv_w,newDiv_h)
+          var l = x * W;
+          var r = y * H;
+          var newDiv_postion = {
+            xx: l-newDiv_w/2,
+            yy: r-newDiv_h/2
+          }
+          console.log("newDiv_postion",newDiv_postion);
+          $("."+newClass).css({
+            "border": "1px solid red",
+            "position": "absolute",
+            "left": newDiv_postion.xx+"px",
+            "top": newDiv_postion.yy+"px",
+            "width": newDiv_w+"px",
+            "height": newDiv_h+"px"
+          });
+              var newDivChild = $('<div></div>');
+          var newClassChild = 'index'+index;
+          newDivChild.addClass(newClassChild);
+          $("."+newClass).append(newDivChild);
+          $(".index"+index).css({
+            // "border": "1px solid red",
+            "position": "absolute",
+            "left": "0px",
+            "top": "0px",
+            "font-size": "40px",
+            "color": "blue"
+          });
+          console.log(index);
+          $(".index"+index).text(index);  
+        })
+    	console.log(info);
+    	        var dataObj = {};
+        $('.mybtn').click(function() {
+          var dataArray = $('.focus-select');
+          //console.log(dataArray[0].innerHTML());
+          dataArray.each(function(index,item){
+               // console.log(index,item)
+            console.log($(item).text());
+            var strInfo = $(item).text();
+           var qLocal = /\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].replace('，',',').trim().split(',');//string类型
+                      qLocal = qLocal.map(function(item,index) {
+              return parseInt(item);
+            })
+            var qinfo =  /区域属性：\d+(,\d+)*/.exec(strInfo)[0].split('：')[1].split(',');
+                 console.log(qinfo);                   
+
+             if(qinfo[1]) {
+                           var qkey = qinfo[0];//第几个框(从0开始)
+              var qtype = qinfo[1];//string类型
+              console.log(qkey,qtype);
+                  console.log("qLcaol",qLocal);
+              var newWidth = (qLocal[2] - qLocal[0])/2;
+              var newX = (newWidth + qLocal[0])/natureWidth;
+              var newHeight = (qLocal[3] - qLocal[1])/2;
+              var newY = (newHeight + qLocal[1])/natureHeight;
+              var newW = newWidth/natureWidth;
+              var newH = newHeight/natureHeight;
+                            dataObj.type = parseInt(qtype);
+              dataObj.location = [];
+               dataObj.location[0] = parseFloat(newX.toFixed(6));
+              dataObj.location[1] = parseFloat(newY.toFixed(6));
+              dataObj.location[2] = parseFloat(newW.toFixed(6));
+              dataObj.location[3] = parseFloat(newH.toFixed(6));
+              console.log(dataObj)
+            }else{
+             var qkey = qinfo;
+             console.log(qkey);
+            }
+          });
+          
+        })
+    }
+
+</script>
+
+<style type="text/css">
+  .info{
+    display:none;
+  }
+   .mybtn {
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      background-color: red;
+    }
+  .card {
+    position: relative;
+  }
+
+</style>
+
+
+数据生成正确的版本：
+<div>
+  <div class="card">
+    <div class="cutout-img" ><img src={img} width="1200px" alt=""></div>
+  </div> 
+
+  <div class="info">{info}</div>
+  <div class="mybtn">生成数据</div>
+</div>
+
+<script>  
+    window.onload = function(){
+        //按照现在图实际的大小根据比例数据生成图框
+        var W = $('.cutout-img img').width();
+        console.log(W);
+        var H = $('.cutout-img img').height();
+        console.log(H);
+        //获得原始图的大小
+        var natureImage = new Image(); 
+        natureImage.src = $('.cutout-img img').attr( "src"); 
+        var natureWidth = natureImage.width;
+        var natureHeight = natureImage.height;
+        console.log("natureWidth,natureHeight:",natureWidth,natureHeight)
+        
+        // var info = JSON.parse($('.info').text());
+        var info = JSON.parse($('.info').text());
+        console.log(info);
+        info.map(function(item,index){
+          //item.key = index;
+          var newDiv = $('<div></div>');
+          var newClass = 'newDiv'+index;
+          newDiv.addClass(newClass);
+          var x = info[index].location[0];
+          var y = info[index].location[1];
+          var w = info[index].location[2];
+          var h = info[index].location[3];
+          $(".card").append(newDiv);
+          var newDiv_w = w * W;
+          var newDiv_h = h * H;
+          console.log("newDiv_w,newDiv_h",newDiv_w,newDiv_h)
+          var l = x * W;
+          var r = y * H;
+          var newDiv_postion = {
+            xx: l-newDiv_w/2,
+            yy: r-newDiv_h/2
+          }
+          console.log("newDiv_postion",newDiv_postion);
+          $("."+newClass).css({
+            "border": "1px solid red",
+            "position": "absolute",
+            "left": newDiv_postion.xx+"px",
+            "top": newDiv_postion.yy+"px",
+            "width": newDiv_w+"px",
+            "height": newDiv_h+"px"
+          });
+          
+          var newDivChild = $('<div></div>');
+          var newClassChild = 'index'+index;
+          newDivChild.addClass(newClassChild);
+          $("."+newClass).append(newDivChild);
+          $(".index"+index).css({
+            // "border": "1px solid red",
+            "position": "absolute",
+            "left": "0px",
+            "top": "0px",
+            "font-size": "40px",
+            "color": "blue"
+          });
+          console.log(index);
+          $(".index"+index).text(index);  
+          
+        })
+        
+        var dataObj = {};
+        $('.mybtn').click(function() {
+          var dataArray = $('.focus-select');
+          //console.log(dataArray[0].innerHTML);
+          dataArray.each(function(index,item){
+          // console.log(index,item)
+            console.log($(item).text());
+            var strInfo = $(item).text();
+            // console.log(/\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].trim());
+            var qLocal = /\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].replace('，',',').trim().split(',');//string类型
+            qLocal = qLocal.map(function(item,index) {
+              return parseInt(item);
+            })
+            var qinfo =  /区域属性：\d+(,\d+)*/.exec(strInfo)[0].split('：')[1].split(',');
+            console.log(qinfo);
+            if(qinfo[1]) {
+              var qkey = qinfo[0];//第几个框(从0开始)
+              var qtype = qinfo[1];//string类型
+              console.log(qkey,qtype);
+              console.log("qLocal",qLocal);
+             var newWidth = qLocal[2] - qLocal[0];
+              var newX = (newWidth/2 + qLocal[0])/natureWidth;
+              var newHeight = qLocal[3] - qLocal[1];
+              var newY = (newHeight/2 + qLocal[1])/natureHeight;
+              var newW = newWidth/natureWidth;
+              var newH = newHeight/natureHeight;
+              dataObj.type = parseInt(qtype);
+              dataObj.location = [];
+              dataObj.location[0] = parseFloat(newX.toFixed(6));
+              dataObj.location[1] = parseFloat(newY.toFixed(6));
+              dataObj.location[2] = parseFloat(newW.toFixed(6));
+              dataObj.location[3] = parseFloat(newH.toFixed(6));
+              console.log(dataObj)
+            }else{
+             var qkey = qinfo[0];
+             console.log(qkey[0]);
+            }
+            
+            //如果新加的那么qtype一定存在
+            
+          });
+        })
+
+      }
+  
+  </script>
+
+<style type="text/css">
+  .info{
+    display:none;
+  }
+   .mybtn {
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      background-color: red;
+    }
+  .card {
+    position: relative;
+  }
+
+</style>
