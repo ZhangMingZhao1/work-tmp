@@ -577,3 +577,92 @@ correct:
   }
 
 </style>
+
+李军测试测试html:
+[{"img":"https://wordcup-entity.oss-cn-hangzhou.aliyuncs.com/object_detection/lijun/lijun278.jpg","info":"[{\"type\":1,\"location\":[0.713523,0.12579,0.060498,0.046776],\"descirption\":\"24:15\"},{\"type\":2,\"location\":[0.855516,0.128319,0.203559,0.044248],\"descirption\":\"乌拉圭 1:0 哥斯达黎加\"}]"}]
+  <div>
+    <div class="card">
+      <div class="example-img" ><img src={img} width="1200px" alt=""></div>
+    </div> 
+  
+    <div class="info">{info}</div>
+    <!-- <div class="mybtn">生成数据</div> -->
+  </div>
+
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script>  
+    window.onload = function(){
+        //按照现在图实际的大小根据比例数据生成图框
+        var W = $('.example-img img').width();
+        console.log(W);
+        var H = $('.example-img img').height();
+        console.log(H);
+        //获得原始图的大小
+        // var natureImage = new Image(); 
+        // natureImage.src = $('.cutout-img img').attr( "src"); 
+        // var natureWidth = natureImage.width;
+        // var natureHeight = natureImage.height;
+        // console.log("natureWidth,natureHeight:",natureWidth,natureHeight)
+        
+        // var info = JSON.parse($('.info').text());
+        var info = JSON.parse($('.info').text());
+        console.log(info);
+        info.map(function(item,index){
+          //item.key = index;
+          var newDiv = $('<div></div>');
+          var newClass = 'newDiv'+index;
+          newDiv.addClass(newClass);
+          var x = info[index].location[0];
+          var y = info[index].location[1];
+          var w = info[index].location[2];
+          var h = info[index].location[3];
+          $(".card").append(newDiv);
+          var newDiv_w = w * W;
+          var newDiv_h = h * H;
+          console.log("newDiv_w,newDiv_h",newDiv_w,newDiv_h)
+          var l = x * W;
+          var r = y * H;
+          var newDiv_postion = {
+            xx: l-newDiv_w/2,
+            yy: r-newDiv_h/2
+          }
+          console.log("newDiv_postion",newDiv_postion);
+          $("."+newClass).css({
+            "border": "1px solid red",
+            "position": "absolute",
+            "left": newDiv_postion.xx+"px",
+            "top": newDiv_postion.yy+"px",
+            "width": newDiv_w+"px",
+            "height": newDiv_h+"px"
+          });
+          
+          var newDivChild = $('<div></div>');
+          var newClassChild = 'index'+index;
+          newDivChild.addClass(newClassChild);
+          $("."+newClass).append(newDivChild);
+          $(".index"+index).css({
+            // "border": "1px solid red",
+            "position": "absolute",
+            "left": "0px",
+            "top": "0px",
+            "font-size": "40px",
+            "color": "blue"
+          });
+          console.log(index);
+          $(".index"+index).text(index);  
+          
+        })
+      }
+  
+  </script>
+
+  <style type="text/css">
+    .info{
+      display: none;
+    }
+    .card {
+      position: relative;
+    }
+
+
+  </style>

@@ -1,0 +1,238 @@
+<div>
+    <div class="card">
+      <div class="cutout-img" ><img src={img} width="1200px" alt=""></div>
+      <div style="display:none" ></div>
+    </div> 
+  
+    <div class="info">{info}</div>
+    <button class="mybtn">生成数据</button>
+    <div>初始共有<span class="total"></span>个框</div>
+    <div class="delbox"><span>输入要删除的序号，以逗号分开</span><div class="inputbox"><input name='delnum' type="text"></div>  <button class="del">删除</button></div>
+</div>
+
+
+   <script>  
+
+    window.onload = function(){
+        $(".questionClass>input[type='text']").attr("readonly", true);
+        //按照现在图实际的大小根据比例数据生成图框
+        var W = $('.cutout-img img').width();
+        console.log(W);
+        var H = $('.cutout-img img').height();
+        console.log(H);
+        //获得原始图的大小
+        var natureImage = new Image(); 
+        natureImage.src = $('.cutout-img img').attr( "src"); 
+        var natureWidth = natureImage.width;
+        var natureHeight = natureImage.height;
+        console.log("natureWidth,natureHeight:",natureWidth,natureHeight)
+        
+        // var info = JSON.parse($('.info').text());
+        // var info = [{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]},{"type":0,"location":[0.583401,0.548043,0.171452,0.978789]},{"type":0,"location":[0.338336,0.583956,0.199699,0.840053]},{"type":0,"location":[0.332996,0.176816,0.178188,0.334520]},{"type":0,"location":[0.627024,0.144963,0.117090, 0.205607]},{"type":0,"location":[0.490999,0.183903,0.071534,0.232579]}];
+        var info = JSON.parse($('.info').text());
+        console.log(20,info);
+      $('.total').text(info.length);
+        info.map(function(item,index){
+          //item.key = index;
+          var newDiv = $('<div></div>');
+          var newClass = 'newDiv'+index;
+          newDiv.addClass(newClass);
+          var x = info[index].location[0];
+          var y = info[index].location[1];
+          var w = info[index].location[2];
+          var h = info[index].location[3];
+          $(".card").append(newDiv);
+          var newDiv_w = w * W;
+          var newDiv_h = h * H;
+          console.log("newDiv_w,newDiv_h",newDiv_w,newDiv_h)
+          var l = x * W;
+          var r = y * H;
+          var newDiv_postion = {
+            xx: l-newDiv_w/2,
+            yy: r-newDiv_h/2
+          }
+          console.log("newDiv_postion",newDiv_postion);
+          $("."+newClass).css({
+            "border": "1px solid red",
+            "position": "absolute",
+            "left": newDiv_postion.xx+"px",
+            "top": newDiv_postion.yy+"px",
+            "width": newDiv_w+"px",
+            "height": newDiv_h+"px"
+          });
+          
+          var newDivChild = $('<div></div>');
+          var newClassChild = 'index'+(index+1);
+          newDivChild.addClass(newClassChild);
+          $("."+newClass).append(newDivChild);
+          $(".index"+(index+1)).css({
+            // "border": "1px solid red",
+            "position": "absolute",
+            "left": "0px",
+            "top": "0px",
+            "font-size": "20px",
+            "color": "blue"
+          });
+          console.log(index);
+          $(".index"+(index+1)).text(index+1);  
+          
+        })
+        
+               $('.del').click(function(){
+           var delnum = $("input[name='delnum']").val();
+          var delarr = delnum.split(',');
+          var cnt = 0;
+                 console.log('删除前:',JSON.stringify(info))
+          delarr.forEach(function(item,index){
+                 $('.newDiv'+(item-1)).css({
+              "display":"none"
+            })
+             item-=cnt;
+              item--;
+              
+              info.splice(item,1);
+              cnt++;
+           
+     
+            
+          })
+                 console.log('删除后:',JSON.stringify(info))
+          $(".questionClass>input[type='text']").val(JSON.stringify(info));
+                           alert('删除成功');
+          $(".del").attr("disabled", true); 
+        })
+      
+        $('.mybtn').click(function() {
+          var dataArray = $('.focus-select');
+          //console.log(dataArray[0].innerHTML);
+          dataArray.each(function(index,item){
+            console.log('-------------------------------------------');
+            (function(index,item) {
+               var dataObj = {};
+                         // console.log(index,item)
+            console.log($(item).text());
+            var strInfo = $(item).text();
+            // console.log(/\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].trim());
+            var qLocal = /\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].replace('，',',').trim().split(',');//string类型
+            qLocal = qLocal.map(function(item,index) {
+              return parseInt(item);
+            })
+            //qkey值，type，描述
+            var qinfo =  /区域属性：\d+(,\d+)*,*(\s|\S)*/.exec(strInfo)[0].split('：')[1].split(',');
+            
+            console.log("qinfo",qinfo);
+            var newWidth = qLocal[2] - qLocal[0];
+            var newX = (newWidth/2 + qLocal[0])/natureWidth;
+            var newHeight = qLocal[3] - qLocal[1];
+            var newY = (newHeight/2 + qLocal[1])/natureHeight;
+            var newW = newWidth/natureWidth;
+            var newH = newHeight/natureHeight;
+            if(qinfo[1]) {
+              console.log('-------------新添工作--------------------------');
+              if(qinfo[2]) {
+                var lastIndex = strInfo.lastIndexOf(',');
+                var descirption = strInfo.slice(lastIndex+1);
+                console.log("descirption",descirption);
+                dataObj.descirption = descirption;
+              }
+              //index qtype descirption
+              var qkey = qinfo[0];//第几个框(从0开始)
+              var qtype = qinfo[1];//string类型
+              console.log(qkey,qtype);
+              console.log("qLocal",qLocal);
+              dataObj.type = parseInt(qtype);
+              dataObj.location = [];
+              dataObj.location[0] = parseFloat(newX.toFixed(6));
+              dataObj.location[1] = parseFloat(newY.toFixed(6));
+              dataObj.location[2] = parseFloat(newW.toFixed(6));
+              dataObj.location[3] = parseFloat(newH.toFixed(6));
+              // dataObj.descirption = descirption;
+              console.log(JSON.stringify(dataObj))
+              console.log('>>>',JSON.stringify(info));
+              if(qkey>info.length){
+                info.push(dataObj);
+                console.log("-------------新添后---------------",JSON.stringify(info));
+              }
+            }else{
+              console.log('-------------修改工作--------------------------');
+              //如果是修改的那么qtype一定存在,不用关qtype
+              console.log("修改前:", JSON.stringify(info));
+              var qkey = parseInt(qinfo[0])-1;//对正下标
+              console.log(qkey);
+              console.log(info[qkey].location[0]);
+              console.log(parseFloat(newX.toFixed(6)));
+             
+             info[qkey].location[0] = parseFloat(newX.toFixed(6));
+             info[qkey].location[1] = parseFloat(newY.toFixed(6));
+             info[qkey].location[2] = parseFloat(newW.toFixed(6));
+             info[qkey].location[3] = parseFloat(newH.toFixed(6));
+             console.log("修改后:", JSON.stringify(info));
+            }
+            })(index,item);
+
+ 
+            
+            
+            
+          });
+          
+          $(".questionClass>input[type='text']").val(JSON.stringify(info));
+                    alert('生成数据成功');
+          $(".mybtn").attr("disabled", true); 
+        })
+
+      }
+  
+  </script>
+
+<style type="text/css">
+  .info{
+    display:none;
+  }
+  .card {
+    position: relative;
+  }
+    .mybtn {
+      position: fixed;
+      left: 0px;
+      bottom: 0px;
+      line-height: 42px;
+      /* display: inline-block; */
+      text-align: center;
+      background: none repeat scroll 0 0 #82C400; 
+      width:107px; 
+      height:42px;  
+      border-width: 0; 
+      font-size: 17px; 
+      color: #FFFFFF; 
+      font-weight: 500; 
+      border-radius: 6px; 
+      cursor:pointer; 
+    }
+    .del {
+      line-height: 42px;
+      display: inline-block;
+      text-align: center;
+      background: none repeat scroll 0 0 red; 
+      width:107px; 
+      height:42px;  
+      border-width: 0; 
+      font-size: 17px; 
+      color: #FFFFFF; 
+      font-weight: 500; 
+      border-radius: 6px; 
+      cursor:pointer; 
+    }
+      .delbox {
+      margin-top: 20px;
+    }
+    .inputbox{
+      display: inline-block;
+      margin-left: 5px;
+    }
+  .total {
+    color:red;
+    font-size:40px;
+    margin-top:10px;
+  }
+</style>

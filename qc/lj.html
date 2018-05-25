@@ -1,0 +1,99 @@
+<div>
+  <button class="mybtn">生成数据</button>
+</div>
+
+
+ <script>  
+
+  window.onload = function(){
+      $(".questionClass>input[type='text']").attr("readonly", true);
+      //按照现在图实际的大小根据比例数据生成图框
+      var W = $('.cutout-img img').width();
+      console.log(W);
+      var H = $('.cutout-img img').height();
+      console.log(H);
+      //获得原始图的大小
+      var natureImage = new Image(); 
+      natureImage.src = $('.cutout-img').attr( "src"); 
+      var natureWidth = natureImage.width;
+      var natureHeight = natureImage.height;
+      console.log("natureWidth,natureHeight:",natureWidth,natureHeight)
+      
+      // var info = JSON.parse($('.info').text());
+      // var info = [{"type":0,"location":[0.199851,0.576990,0.119220,0.897140]},{"type":0,"location":[0.449993,0.539680,0.154738,0.923844]},{"type":0,"location":[0.714292,0.556027,0.183488,0.849911]},{"type":0,"location":[0.583401,0.548043,0.171452,0.978789]},{"type":0,"location":[0.338336,0.583956,0.199699,0.840053]},{"type":0,"location":[0.332996,0.176816,0.178188,0.334520]},{"type":0,"location":[0.627024,0.144963,0.117090, 0.205607]},{"type":0,"location":[0.490999,0.183903,0.071534,0.232579]}];
+      // var info = JSON.parse($('.info').text());
+      var info = [];
+      $('.mybtn').click(function() {
+        var dataArray = $('.focus-select');
+        //console.log(dataArray[0].innerHTML);
+        dataArray.each(function(index,item){
+          console.log('-----------------每个框循环开始--------------------------');
+          (function(index,item) {
+            var dataObj = {};
+            // console.log(index,item)
+            console.log("$(item).text()",$(item).text());
+            var strInfo = $(item).text();
+            // console.log(/\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].trim());
+            var qLocal = /\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].replace('，',',').trim().split(',');//string类型
+            qLocal = qLocal.map(function(item,index) {
+              return parseInt(item);
+            })
+            //qkey值，type，描述
+            var qinfo =  /区域属性：\d+,(\s|\S)*/.exec(strInfo)[0].split('：')[1].split(','); 
+            console.log("qinfo:",qinfo);
+            var newWidth = qLocal[2] - qLocal[0];
+            var newX = (newWidth/2 + qLocal[0])/natureWidth;
+            var newHeight = qLocal[3] - qLocal[1];
+            var newY = (newHeight/2 + qLocal[1])/natureHeight;
+            var newW = newWidth/natureWidth;
+            var newH = newHeight/natureHeight;
+            console.log('-------------新添工作--------------------------');
+            var lastIndex = strInfo.lastIndexOf(',');
+            var descirption = strInfo.slice(lastIndex+1);
+            // console.log("descirption",descirption);
+            //index qtype descirption
+           
+            var qtype = qinfo[0];//type string类型
+            console.log("qtype,qLocal,descirption:",qtype,qLocal,descirption);
+            dataObj.type = parseInt(qtype);
+            dataObj.location = [];
+            dataObj.location[0] = parseFloat(newX.toFixed(6));
+            dataObj.location[1] = parseFloat(newY.toFixed(6));
+            dataObj.location[2] = parseFloat(newW.toFixed(6));
+            dataObj.location[3] = parseFloat(newH.toFixed(6));
+            dataObj.descirption = descirption;
+            // dataObj.descirption = descirption;
+            console.log(JSON.stringify(dataObj))
+            console.log('>>>',JSON.stringify(info));
+            info.push(dataObj);
+            console.log("-------------新添后---------------",JSON.stringify(info));
+          })(index,item);
+      });
+   
+      $(".questionClass>input[type='text']").val(JSON.stringify(info));
+      alert('生成数据成功');
+      $(".mybtn").attr("disabled", true); 
+      })
+    }
+
+</script>
+
+<style type="text/css">
+  .mybtn {
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    line-height: 42px;
+    /* display: inline-block; */
+    text-align: center;
+    background: none repeat scroll 0 0 #82C400; 
+    width:107px; 
+    height:42px;  
+    border-width: 0; 
+    font-size: 17px; 
+    color: red; 
+    font-weight: 500; 
+    border-radius: 6px; 
+    cursor:pointer; 
+  }
+</style>
