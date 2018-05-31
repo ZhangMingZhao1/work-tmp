@@ -1,0 +1,75 @@
+<script>  
+
+  window.onload = function(){
+      $(".questionClass>input[type='text']").attr("readonly", true);
+      //获得原始图的大小
+      var natureImage = new Image(); 
+      natureImage.src = $('.cutout-img').attr( "src"); 
+      var natureWidth = natureImage.width;
+      var natureHeight = natureImage.height;
+      var info = [];
+      $('.mybtn').click(function() {
+        var dataArray = $('.focus-select');
+       
+        dataArray.each(function(index,item){  
+          (function(index,item) {
+             var dataObj = {};
+          var strInfo = $(item).text();       
+          var qLocal = /\d+\s*,\s*\d+\s*，\s*\d+\s*,\s*\d+/.exec(strInfo)[0].replace('，',',').trim().split(',');//string类型
+          qLocal = qLocal.map(function(item,index) {
+            return parseInt(item);
+          })
+          //qkey值，type，描述
+          var qinfo =  /区域属性：\d+(,\d+)*,*(\s|\S)*/.exec(strInfo)[0].split('：')[1].split(',');
+          
+          var newWidth = qLocal[2] - qLocal[0];
+          var newX = (newWidth/2 + qLocal[0])/natureWidth;
+          var newHeight = qLocal[3] - qLocal[1];
+          var newY = (newHeight/2 + qLocal[1])/natureHeight;
+          var newW = newWidth/natureWidth;
+          var newH = newHeight/natureHeight;
+          if(qinfo[1]) {
+            //index qtype 
+            var qkey = qinfo[0];//第几个框(从0开始)
+            var qtype = qinfo[1];//string类型
+            dataObj.type = parseInt(qtype);
+            dataObj.location = [];
+            dataObj.location[0] = parseFloat(newX.toFixed(6));
+            dataObj.location[1] = parseFloat(newY.toFixed(6));
+            dataObj.location[2] = parseFloat(newW.toFixed(6));
+            dataObj.location[3] = parseFloat(newH.toFixed(6));   
+            if(qkey>info.length){
+              info.push(dataObj);
+            }
+          }
+          })(index,item);
+        });
+        
+        $(".questionClass>input[type='text']").val(JSON.stringify(info));
+        alert('生成数据成功');
+        // $(".mybtn").attr("disabled", true); 
+      })
+
+    }
+
+</script>
+
+<style type="text/css">
+  .mybtn {
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    line-height: 42px;
+    /* display: inline-block; */
+    text-align: center;
+    background: none repeat scroll 0 0 #82C400; 
+    width:107px; 
+    height:42px;  
+    border-width: 0; 
+    font-size: 17px; 
+    color: #FFFFFF; 
+    font-weight: 500; 
+    border-radius: 6px; 
+    cursor:pointer; 
+  }
+</style>
