@@ -40,12 +40,6 @@
             var qtype = qinfo[1];//string类型
             console.log(qkey,qtype);
             console.log("qLocal",qLocal);
-            // var newWidth = qLocal[2] - qLocal[0];
-            // var newX = (newWidth/2 + qLocal[0])/natureWidth;
-            // var newHeight = qLocal[3] - qLocal[1];
-            // var newY = (newHeight/2 + qLocal[1])/natureHeight;
-            // var newW = newWidth/natureWidth;
-            // var newH = newHeight/natureHeight;
             dataObj.type = parseInt(qtype);
             dataObj.location = [];
             dataObj.location[0] = parseFloat(newX.toFixed(6));
